@@ -3,151 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Untuk Kamu...</title>
+  <title>Undangan Spesial Untukmu ✨</title>
   <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background-color: #fdf2f8;
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      margin: 0;
-      overflow: hidden;
-    }
-    
-    .content-wrapper {
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    /* --- VARIABEL WARNA & ANIMASI (BIRU & UNGU PASTEL) --- */
+    :root {
+      --background-color-1: #e0e7ff; /* Biru Indigo lembut */
+      --background-color-2: #f3e8ff; /* Ungu lembut */
+      --button-color: #6366f1;       /* Indigo cerah */
+      --button-hover: #4f46e5;       /* Indigo gelap saat di-hover */
+      --text-color: #4338ca;         /* Warna teks utama */
+      --accent-purple: #a855f7;      /* Ungu aksen */
+      --bounce-speed: 0.6s;
     }
 
-    /* Gambar Utama/GIF */
-    #gif {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, var(--background-color-1), var(--background-color-2));
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    /* --- KOTAK KONTEN UTAMA (GLASSMORPHISM) --- */
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2.5rem;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15);
+      text-align: center;
+      width: 90%;
+      max-width: 450px;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.5s ease;
+    }
+
+    /* Foto Kucing Utama - Sekarang menggunakan file lokal */
+    #mainPhoto {
       width: 200px;
       height: 200px;
-      border-radius: 10px;
+      border-radius: 20px;
       object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     }
-    
+
     h1 {
-      color: #db2777;
-      margin-top: 20px;
-      padding: 0 20px;
+      color: var(--text-color);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.3;
     }
-    
-    /* Container Tombol Utama (Yes/No) */
+
+    .subtitle {
+      color: #64748b;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    /* --- TOMBOL UTAMA (YES/NO) --- */
     .buttons {
-      margin-top: 20px;
       display: flex;
       gap: 15px;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
+      min-height: 80px;
     }
-    
-    /* Styling Tombol Standar */
-    button {
+
+    .cute-btn {
+      background: var(--button-color);
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-    
-    /* Tombol Utama (Yes) */
-    #yesBtn {
-      background-color: #ec4899;
+      padding: 12px 28px;
+      border-radius: 50px;
       color: white;
-      padding: 10px 20px;
-      font-size: 16px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
     }
-    #yesBtn:hover { background-color: #db2777; }
-    
-    /* Tombol Utama (No) */
+
+    .cute-btn:hover {
+      transform: scale(1.05);
+      background: var(--button-hover);
+    }
+
     #noBtn {
-      background-color: #e5e7eb;
-      color: #374151;
-      padding: 10px 20px;
-      font-size: 16px;
+      background: #ffffff;
+      color: #64748b;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    #noBtn:hover {
+      background: #f1f5f9;
     }
 
-    /* --- Container Pilihan Tempat dengan Gambar --- */
+    /* --- LAYOUT PILIHAN TEMPAT (ROW LIST) --- */
     #placeSelection {
-      margin-top: 25px;
       display: none; /* Sembunyi di awal */
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 0 10px;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 5px;
+      width: 100%;
     }
 
-    /* Styling Kartu Pilihan Tempat */
     .placeCard {
       background: white;
-      border: 2px solid #fbcfe8;
-      border-radius: 15px;
-      width: 150px;
-      padding: 10px;
+      border: 2px solid #e0e7ff;
+      border-radius: 16px;
+      padding: 12px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: all 0.3s ease;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      gap: 20px;
+      text-align: left;
     }
 
     .placeCard:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px -3px rgba(219, 39, 119, 0.2);
+      transform: translateY(-3px);
+      border-color: var(--accent-purple);
+      box-shadow: 0 10px 20px rgba(168, 85, 247, 0.15);
     }
 
     .placeCard img {
-      width: 130px;
-      height: 100px;
+      width: 80px;
+      height: 65px;
       border-radius: 10px;
       object-fit: cover;
-      margin-bottom: 10px;
+      background-color: #f1f5f9;
     }
 
     .placeCard p {
       margin: 0;
-      color: #db2777;
       font-weight: bold;
-      font-size: 14px;
+      color: var(--text-color);
+      font-size: 1.05rem;
     }
 
-    /* --- Animasi Floating Emoji --- */
-    .floating-emoji {
-      position: fixed;
-      bottom: -30px;
-      font-size: 28px;
-      pointer-events: none;
-      animation: floatUp linear forwards;
-      opacity: 0.8;
-      z-index: 1;
+    /* --- ANIMATION TEXT DI AKHIR --- */
+    .celebration-text {
+      font-size: 2.2rem;
+      color: var(--accent-purple);
+      font-weight: bold;
+      margin-bottom: 15px;
+      animation: bounce var(--bounce-speed) infinite alternate;
     }
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.8); opacity: 1; }
-      100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+
+    @keyframes bounce {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
     }
   </style>
 </head>
 <body>
 
-  <div class="content-wrapper">
-    <img id="gif" src="https://media.tenor.com/ef3Pz7vT9uMAAAAi/tkthao219-bubududu.gif" alt="Cute Bear">
+  <div class="container">
+    <img id="mainPhoto" src="kucing_bunga.png" alt="Kucing Imut Bawa Bunga">
+    
     <h1 id="question">Maukah kamu jalan sama aku?</h1>
+    <p id="subtitle" class="subtitle">Aku punya rencana seru hari ini...</p>
     
     <div class="buttons" id="initialButtons">
-      <button id="yesBtn" onclick="accept()">Mau! ❤️</button>
-      <button id="noBtn" onclick="decline()">Enggak</button>
+      <button id="yesBtn" class="cute-btn" onclick="accept()">Mau! ❤️</button>
+      <button id="noBtn" class="cute-btn" onclick="decline()">Enggak</button>
     </div>
 
     <div id="placeSelection">
-      
       <div class="placeCard" onclick="choosePlace('AEON Mall Tanjung Barat 🛍️')">
         <img src="aeon.jpg" alt="AEON Mall">
         <p>AEON Mall<br>Tanjung Barat</p>
@@ -160,86 +195,66 @@
 
       <div class="placeCard" onclick="choosePlace('Saran')">
         <img src="saran.png" alt="Ada saran?">
-        <p>Ada saran?</p>
+        <p>Ada saran lain?</p>
       </div>
-
     </div>
   </div>
 
   <script>
-    // --- LOGIKA TOMBOL ---
+    // --- LOGIKA TOMBOL MEKANIK INTERAKTIF ---
     const noTexts = [
-      "Enggak", "Yakin nih?", "Pikir-pikir dulu dong...", "Beneran gamau?", 
-      "Pliss mau dong 🥺", "Tega banget 😭", "Coba klik yang sebelah kiri aja"
+      "Enggak", "Yakin nih?", "Coba pikir lagi...", 
+      "Beneran gamau?", "Nanti nyesel lho...", "Tega banget 🥺"
     ];
     let noCount = 0;
-    let yesSize = 16;
-    let yesPadY = 10;
-    let yesPadX = 20;
+    let yesScale = 1;
 
     function decline() {
       noCount++;
       const noBtn = document.getElementById("noBtn");
       const yesBtn = document.getElementById("yesBtn");
       
+      // Mengubah teks tombol No secara berkala
       noBtn.innerText = noTexts[Math.min(noCount, noTexts.length - 1)];
       
-      // Ukuran tombol 'Mau' bertambah besar setiap kali 'Enggak' diklik
-      yesSize *= 1.4; 
-      yesPadY *= 1.3; 
-      yesPadX *= 1.3;
-      yesBtn.style.fontSize = yesSize + "px";
-      yesBtn.style.padding = `${yesPadY}px ${yesPadX}px`;
+      // Memperbesar tombol Yes menggunakan CSS Transform Scale (Lebih smooth)
+      yesScale += 0.45;
+      yesBtn.style.transform = `scale(${yesScale})`;
+      
+      // Efek getar kecil pada tombol No saat diklik
+      noBtn.style.transform = 'translateX(8px)';
+      setTimeout(() => noBtn.style.transform = 'translateX(0)', 100);
     }
 
     function accept() {
-      // Ubah gambar menjadi GIF senang saat tombol 'Mau!' ditekan
-      document.getElementById("gif").src = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif";
-      document.getElementById("question").innerText = "Yeayyy! Mau ke mana nih? 🥰";
+      // Setel ulang transform tombol Yes agar tidak merusak layout slide berikutnya
+      document.getElementById("yesBtn").style.transform = "scale(1)";
       
-      // Tukar tampilan dari tombol utama ke kartu pilihan tempat
+      // Ganti properti teks ke tahap 2
+      document.getElementById("question").innerText = "Yeayyy! Mau ke mana nih?";
+      document.getElementById("subtitle").innerText = "Pilih salah satu tempat di bawah ini ya! 🥰";
+      
+      // Tukar transisi elemen
       document.getElementById("initialButtons").style.display = "none";
       document.getElementById("placeSelection").style.display = "flex";
     }
 
     function choosePlace(tempat) {
-      // Ubah gambar menjadi GIF pelukan setelah tempat dipilih
-      document.getElementById("gif").src = "https://media.tenor.com/JJ8P2M8T1HMAAAAi/tkthao219-bubududu.gif";
+      // Ubah judul menjadi style teks memantul (bounce)
+      const questionEl = document.getElementById("question");
+      questionEl.className = "celebration-text";
+      questionEl.innerText = "Oke Deal! 🚀";
       
+      const subtitleEl = document.getElementById("subtitle");
       if(tempat === 'Saran') {
-        document.getElementById("question").innerText = "Oke! Chat aku ya, kamu maunya ke mana. Sampai ketemu! 🚀";
+        subtitleEl.innerText = "Kabari aku lewat chat ya kamu maunya ke mana. Sampai ketemu! ✨";
       } else {
-        document.getElementById("question").innerText = `Oke deal! Kita ke ${tempat} ya! Nanti aku jemput! 🚀`;
+        subtitleEl.innerText = `Kita jalan ke ${tempat} ya! Nanti aku jemput! ✨`;
       }
       
-      // Sembunyikan kartu tempat agar bersih di akhir cerita
+      // Bersihkan list kartu dari layar
       document.getElementById("placeSelection").style.display = "none";
     }
-
-    // --- LOGIKA FLOATING EMOJI ---
-    const floatingEmojis = {
-        hearts: ['🩵', '💖', '💜'],
-        pinguin: ['🐧', '🐨']
-    };
-    const allEmojis = [...floatingEmojis.hearts, ...floatingEmojis.pinguin];
-
-    function createEmoji() {
-      const emojiEl = document.createElement("div");
-      emojiEl.classList.add("floating-emoji");
-      emojiEl.innerText = allEmojis[Math.floor(Math.random() * allEmojis.length)];
-      emojiEl.style.left = Math.random() * 100 + "vw";
-      
-      const duration = Math.random() * 3 + 3; // Durasi melayang antara 3-6 detik
-      emojiEl.style.animationDuration = duration + "s";
-      
-      document.body.appendChild(emojiEl);
-      
-      // Otomatis hapus elemen dari memori setelah animasi selesai
-      setTimeout(() => { emojiEl.remove(); }, duration * 1000);
-    }
-    
-    // Munculkan satu emoji acak setiap 400 milidetik
-    setInterval(createEmoji, 400);
   </script>
 
 </body>
