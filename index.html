@@ -30,9 +30,10 @@
       align-items: center;
       background: linear-gradient(135deg, var(--background-color-1), var(--background-color-2));
       font-family: 'Arial', sans-serif;
-      overflow: hidden;
+      overflow: hidden; /* Mengunci layar utama agar tidak ada scrollbar bocor */
     }
 
+    /* KOTAK PUTIH UTAMA (Scroll dihapus dari sini agar tombol bisa keluar) */
     .container {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
@@ -46,19 +47,7 @@
       z-index: 10;
       border: 1px solid rgba(255, 255, 255, 0.6);
       transition: all 0.5s ease;
-      
-      /* --- TAMBAHAN BARU BISA SCROLL --- */
-      max-height: 90vh; /* Membatasi tinggi kotak maksimal 90% dari layar HP */
-      overflow-y: auto; /* Mengaktifkan scroll vertikal jika konten kepanjangan */
-      
-      /* Sembunyikan garis scrollbar biar tetap estetik */
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-    }
-
-    /* Sembunyikan garis scrollbar untuk Chrome/Safari */
-    .container::-webkit-scrollbar {
-      display: none;
+      position: relative; /* Penting untuk z-index */
     }
 
     #mainPhoto {
@@ -68,6 +57,7 @@
       object-fit: cover;
       margin-bottom: 20px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      position: relative;
     }
 
     h1 {
@@ -91,6 +81,13 @@
       justify-content: center;
       flex-wrap: wrap;
       min-height: 80px;
+      position: relative;
+    }
+
+    /* Trik agar tombol MAU selalu ada di lapisan terdepan saat membesar */
+    #yesBtn {
+      position: relative;
+      z-index: 999; 
     }
 
     .cute-btn {
@@ -123,12 +120,25 @@
       background: #f1f5f9;
     }
 
+    /* --- LAYOUT PILIHAN TEMPAT (Scroll dipindah ke sini) --- */
     #placeSelection {
       display: none; 
       flex-direction: column;
       gap: 15px;
       margin-top: 5px;
       width: 100%;
+      max-height: 50vh; /* Kotak tempat maksimal setengah layar */
+      overflow-y: auto; /* Bisa discroll ke bawah kalau tempatnya banyak */
+      padding: 5px; /* Jarak aman agar shadow kartu tidak kepotong */
+    }
+
+    /* Modifikasi Scrollbar agar lebih estetik dan tipis */
+    #placeSelection::-webkit-scrollbar {
+      width: 6px;
+    }
+    #placeSelection::-webkit-scrollbar-thumb {
+      background-color: var(--background-color-1);
+      border-radius: 10px;
     }
 
     .placeCard {
@@ -240,7 +250,6 @@
 
   <script>
     // --- GANTI DENGAN NOMOR WA KAMU (ILAM) ---
-    // Pastikan pakai format 628 tanpa tanda plus (+) atau angka 0 di depan
     const nomorWA = "6285137081105"; 
 
     const noTexts = [
@@ -248,6 +257,8 @@
       "Bener tak mau?", "Nanti abi menyesalll", "Masaa tak mauu"
     ];
     let noCount = 0;
+    
+    // Kita buat skala awalnya sedikit lebih besar agar cepat full layar
     let yesScale = 1;
 
     function decline() {
@@ -256,8 +267,11 @@
       const yesBtn = document.getElementById("yesBtn");
       
       noBtn.innerText = noTexts[Math.min(noCount, noTexts.length - 1)];
-      yesScale += 0.45;
+      
+      // Tombol membesar secara eksponensial supaya langsung full layar
+      yesScale += 0.6;
       yesBtn.style.transform = `scale(${yesScale})`;
+      
       noBtn.style.transform = 'translateX(8px)';
       setTimeout(() => noBtn.style.transform = 'translateX(0)', 100);
     }
@@ -265,16 +279,15 @@
     function accept() {
       document.getElementById("yesBtn").style.transform = "scale(1)";
       document.getElementById("question").innerText = "Yeayyy! Mau ke mana kitaa?";
-      document.getElementById("subtitle").innerText = "Abi pilih salah satu di bawah ini yaaa";
+      document.getElementById("subtitle").innerText = "Abi pilih salah satu tempat di bawah ini yaaa";
       document.getElementById("initialButtons").style.display = "none";
       document.getElementById("placeSelection").style.display = "flex";
     }
 
     function showInputSaran() {
-      // Sembunyikan list kartu, tampilkan form input
       document.getElementById("placeSelection").style.display = "none";
       document.getElementById("saranInput").style.display = "flex";
-      document.getElementById("subtitle").innerText = "Wah mau kemana tuu? abii ketik di bawah yaa";
+      document.getElementById("subtitle").innerText = "Abii mau kemana tuu? Ketik di bawah yaa";
     }
 
     function submitSaran() {
@@ -297,18 +310,15 @@
       document.getElementById("placeSelection").style.display = "none";
       document.getElementById("saranInput").style.display = "none";
 
-      // Buat pesan otomatis ke WhatsApp
       const pesanWA = `Ilamm! Abi maunya kita afteroffice date ke ${tempat} nihh! Jemput di nestle yaaa 💐`;
       const linkWA = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesanWA)}`;
 
-      // Ganti isi bawah dengan tombol untuk kirim WA
       const btnWA = document.createElement("a");
       btnWA.href = linkWA;
       btnWA.className = "cute-btn";
       btnWA.style.marginTop = "20px";
-      btnWA.innerText = "Kabarin Ilam di wa";
+      btnWA.innerText = "Kabarin Ilam di WA yaa";
       
-      // Tambahkan tombol WA ke dalam container
       document.querySelector(".container").appendChild(btnWA);
     }
   </script>
