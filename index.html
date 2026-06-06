@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Untuk abi pacar ilam ​💐​</title>
+  <title>Untuk abi pacar ilam 💐</title>
   <style>
-    /* --- VARIABEL WARNA & ANIMASI (BIRU & UNGU PASTEL) --- */
+    /* --- VARIABEL WARNA & ANIMASI --- */
     :root {
-      --background-color-1: #e0e7ff; /* Biru Indigo lembut */
-      --background-color-2: #f3e8ff; /* Ungu lembut */
-      --button-color: #6366f1;       /* Indigo cerah */
-      --button-hover: #4f46e5;       /* Indigo gelap saat di-hover */
-      --text-color: #4338ca;         /* Warna teks utama */
-      --accent-purple: #a855f7;      /* Ungu aksen */
+      --background-color-1: #e0e7ff; 
+      --background-color-2: #f3e8ff; 
+      --button-color: #6366f1;       
+      --button-hover: #4f46e5;       
+      --text-color: #4338ca;         
+      --accent-purple: #a855f7;      
       --bounce-speed: 0.6s;
     }
 
@@ -33,7 +33,6 @@
       overflow: hidden;
     }
 
-    /* --- KOTAK KONTEN UTAMA (GLASSMORPHISM) --- */
     .container {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
@@ -47,9 +46,21 @@
       z-index: 10;
       border: 1px solid rgba(255, 255, 255, 0.6);
       transition: all 0.5s ease;
+      
+      /* --- TAMBAHAN BARU BISA SCROLL --- */
+      max-height: 90vh; /* Membatasi tinggi kotak maksimal 90% dari layar HP */
+      overflow-y: auto; /* Mengaktifkan scroll vertikal jika konten kepanjangan */
+      
+      /* Sembunyikan garis scrollbar biar tetap estetik */
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
     }
 
-    /* Foto Kucing Utama - Sekarang menggunakan file lokal */
+    /* Sembunyikan garis scrollbar untuk Chrome/Safari */
+    .container::-webkit-scrollbar {
+      display: none;
+    }
+
     #mainPhoto {
       width: 200px;
       height: 200px;
@@ -73,7 +84,6 @@
       margin-bottom: 25px;
     }
 
-    /* --- TOMBOL UTAMA (YES/NO) --- */
     .buttons {
       display: flex;
       gap: 15px;
@@ -94,6 +104,8 @@
       cursor: pointer;
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
       box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+      text-decoration: none;
+      display: inline-block;
     }
 
     .cute-btn:hover {
@@ -111,9 +123,8 @@
       background: #f1f5f9;
     }
 
-    /* --- LAYOUT PILIHAN TEMPAT (ROW LIST) --- */
     #placeSelection {
-      display: none; /* Sembunyi di awal */
+      display: none; 
       flex-direction: column;
       gap: 15px;
       margin-top: 5px;
@@ -154,7 +165,28 @@
       font-size: 1.05rem;
     }
 
-    /* --- ANIMATION TEXT DI AKHIR --- */
+    /* --- FORM INPUT SARAN --- */
+    #saranInput {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    #saranText {
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px solid var(--background-color-1);
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      text-align: center;
+    }
+
+    #saranText:focus {
+      border-color: var(--accent-purple);
+    }
+
     .celebration-text {
       font-size: 2.2rem;
       color: var(--accent-purple);
@@ -183,25 +215,34 @@
     </div>
 
     <div id="placeSelection">
-      <div class="placeCard" onclick="choosePlace('AEON Mall Tanjung Barat')">
+      <div class="placeCard" onclick="finishDate('AEON Mall Tanjung Barat')">
         <img src="aeon.jpg" alt="AEON Mall">
         <p>AEON Mall<br>Tanjung Barat</p>
       </div>
 
-      <div class="placeCard" onclick="choosePlace('Makan Kebab 🌯')">
+      <div class="placeCard" onclick="finishDate('Makan Kebab 🌯')">
         <img src="kebab.jpg" alt="Kebab">
         <p>Mam Kebab</p>
       </div>
 
-      <div class="placeCard" onclick="choosePlace('Saran')">
+      <div class="placeCard" onclick="showInputSaran()">
         <img src="saran.png" alt="Ada saran?">
         <p>Abi ada saran tak?</p>
       </div>
     </div>
+
+    <div id="saranInput">
+      <input type="text" id="saranText" placeholder="Tulis maunya kemanaa...">
+      <button class="cute-btn" onclick="submitSaran()">Kirim ke ilam!</button>
+    </div>
+
   </div>
 
   <script>
-    // --- LOGIKA TOMBOL MEKANIK INTERAKTIF ---
+    // --- GANTI DENGAN NOMOR WA KAMU (ILAM) ---
+    // Pastikan pakai format 628 tanpa tanda plus (+) atau angka 0 di depan
+    const nomorWA = "6285137081105"; 
+
     const noTexts = [
       "Takk", "Yakin nii?", "Coba abi pikir2 lagii", 
       "Bener tak mau?", "Nanti abi menyesalll", "Masaa tak mauu"
@@ -214,46 +255,61 @@
       const noBtn = document.getElementById("noBtn");
       const yesBtn = document.getElementById("yesBtn");
       
-      // Mengubah teks tombol No secara berkala
       noBtn.innerText = noTexts[Math.min(noCount, noTexts.length - 1)];
-      
-      // Memperbesar tombol Yes menggunakan CSS Transform Scale (Lebih smooth)
       yesScale += 0.45;
       yesBtn.style.transform = `scale(${yesScale})`;
-      
-      // Efek getar kecil pada tombol No saat diklik
       noBtn.style.transform = 'translateX(8px)';
       setTimeout(() => noBtn.style.transform = 'translateX(0)', 100);
     }
 
     function accept() {
-      // Setel ulang transform tombol Yes agar tidak merusak layout slide berikutnya
       document.getElementById("yesBtn").style.transform = "scale(1)";
-      
-      // Ganti properti teks ke tahap 2
       document.getElementById("question").innerText = "Yeayyy! Mau ke mana kitaa?";
-      document.getElementById("subtitle").innerText = "Abi pilih salah satu tempat di bawah ini yaaa";
-      
-      // Tukar transisi elemen
+      document.getElementById("subtitle").innerText = "Abi pilih salah satu di bawah ini yaaa";
       document.getElementById("initialButtons").style.display = "none";
       document.getElementById("placeSelection").style.display = "flex";
     }
 
-    function choosePlace(tempat) {
-      // Ubah judul menjadi style teks memantul (bounce)
+    function showInputSaran() {
+      // Sembunyikan list kartu, tampilkan form input
+      document.getElementById("placeSelection").style.display = "none";
+      document.getElementById("saranInput").style.display = "flex";
+      document.getElementById("subtitle").innerText = "Wah mau kemana tuu? abii ketik di bawah yaa";
+    }
+
+    function submitSaran() {
+      const tempatKetik = document.getElementById("saranText").value;
+      if (tempatKetik.trim() === "") {
+        alert("Isi dulu dong abii maunya kemanaaa");
+        return;
+      }
+      finishDate(tempatKetik);
+    }
+
+    function finishDate(tempat) {
       const questionEl = document.getElementById("question");
       questionEl.className = "celebration-text";
-      questionEl.innerText = "Oke Deal!";
+      questionEl.innerText = "Oke ACC!";
       
       const subtitleEl = document.getElementById("subtitle");
-      if(tempat === 'Saran') {
-        subtitleEl.innerText = "Kabarin ilam abi mau kemanaa jadinyaa";
-      } else {
-        subtitleEl.innerText = `Kita date ke ${tempat} ya! Nanti ilam jemput abii di nestle`;
-      }
+      subtitleEl.innerText = `Kita date ke ${tempat} ya! Nanti ilam jemput abii di nestle`;
       
-      // Bersihkan list kartu dari layar
       document.getElementById("placeSelection").style.display = "none";
+      document.getElementById("saranInput").style.display = "none";
+
+      // Buat pesan otomatis ke WhatsApp
+      const pesanWA = `Ilamm! Abi maunya kita afteroffice date ke ${tempat} nihh! Jemput di nestle yaaa 💐`;
+      const linkWA = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesanWA)}`;
+
+      // Ganti isi bawah dengan tombol untuk kirim WA
+      const btnWA = document.createElement("a");
+      btnWA.href = linkWA;
+      btnWA.className = "cute-btn";
+      btnWA.style.marginTop = "20px";
+      btnWA.innerText = "Kabarin Ilam di wa";
+      
+      // Tambahkan tombol WA ke dalam container
+      document.querySelector(".container").appendChild(btnWA);
     }
   </script>
 
