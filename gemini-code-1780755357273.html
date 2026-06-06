@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untuk Kamu...</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #fdf2f8;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+    }
+    
+    .content-wrapper {
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Gambar Utama/GIF */
+    #gif {
+      width: 200px;
+      height: 200px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    
+    h1 {
+      color: #db2777;
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+    
+    /* Container Tombol Utama (Yes/No) */
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    /* Styling Tombol Standar */
+    button {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    
+    /* Tombol Utama (Yes) */
+    #yesBtn {
+      background-color: #ec4899;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #yesBtn:hover { background-color: #db2777; }
+    
+    /* Tombol Utama (No) */
+    #noBtn {
+      background-color: #e5e7eb;
+      color: #374151;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    /* --- Container Pilihan Tempat dengan Gambar --- */
+    #placeSelection {
+      margin-top: 25px;
+      display: none; /* Sembunyi di awal */
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 10px;
+    }
+
+    /* Styling Kartu Pilihan Tempat */
+    .placeCard {
+      background: white;
+      border: 2px solid #fbcfe8;
+      border-radius: 15px;
+      width: 150px;
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .placeCard:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(219, 39, 119, 0.2);
+    }
+
+    .placeCard img {
+      width: 130px;
+      height: 100px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .placeCard p {
+      margin: 0;
+      color: #db2777;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    /* --- Animasi Floating Emoji --- */
+    .floating-emoji {
+      position: fixed;
+      bottom: -30px;
+      font-size: 28px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="content-wrapper">
+    <img id="gif" src="https://media.tenor.com/ef3Pz7vT9uMAAAAi/tkthao219-bubududu.gif" alt="Cute Bear">
+    <h1 id="question">Maukah kamu jalan sama aku?</h1>
+    
+    <div class="buttons" id="initialButtons">
+      <button id="yesBtn" onclick="accept()">Mau! ❤️</button>
+      <button id="noBtn" onclick="decline()">Enggak</button>
+    </div>
+
+    <div id="placeSelection">
+      
+      <div class="placeCard" onclick="choosePlace('AEON Mall Tanjung Barat 🛍️')">
+        <img src="aeon.jpg" alt="AEON Mall">
+        <p>AEON Mall<br>Tanjung Barat</p>
+      </div>
+
+      <div class="placeCard" onclick="choosePlace('Makan Kebab 🌯')">
+        <img src="kebab.jpg" alt="Kebab">
+        <p>Makan Kebab</p>
+      </div>
+
+      <div class="placeCard" onclick="choosePlace('Saran')">
+        <img src="saran.png" alt="Ada saran?">
+        <p>Ada saran?</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- LOGIKA TOMBOL ---
+    const noTexts = [
+      "Enggak", "Yakin nih?", "Pikir-pikir dulu dong...", "Beneran gamau?", 
+      "Pliss mau dong 🥺", "Tega banget 😭", "Coba klik yang sebelah kiri aja"
+    ];
+    let noCount = 0;
+    let yesSize = 16;
+    let yesPadY = 10;
+    let yesPadX = 20;
+
+    function decline() {
+      noCount++;
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+      
+      noBtn.innerText = noTexts[Math.min(noCount, noTexts.length - 1)];
+      
+      // Ukuran tombol 'Mau' bertambah besar setiap kali 'Enggak' diklik
+      yesSize *= 1.4; 
+      yesPadY *= 1.3; 
+      yesPadX *= 1.3;
+      yesBtn.style.fontSize = yesSize + "px";
+      yesBtn.style.padding = `${yesPadY}px ${yesPadX}px`;
+    }
+
+    function accept() {
+      // Ubah gambar menjadi GIF senang saat tombol 'Mau!' ditekan
+      document.getElementById("gif").src = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif";
+      document.getElementById("question").innerText = "Yeayyy! Mau ke mana nih? 🥰";
+      
+      // Tukar tampilan dari tombol utama ke kartu pilihan tempat
+      document.getElementById("initialButtons").style.display = "none";
+      document.getElementById("placeSelection").style.display = "flex";
+    }
+
+    function choosePlace(tempat) {
+      // Ubah gambar menjadi GIF pelukan setelah tempat dipilih
+      document.getElementById("gif").src = "https://media.tenor.com/JJ8P2M8T1HMAAAAi/tkthao219-bubududu.gif";
+      
+      if(tempat === 'Saran') {
+        document.getElementById("question").innerText = "Oke! Chat aku ya, kamu maunya ke mana. Sampai ketemu! 🚀";
+      } else {
+        document.getElementById("question").innerText = `Oke deal! Kita ke ${tempat} ya! Nanti aku jemput! 🚀`;
+      }
+      
+      // Sembunyikan kartu tempat agar bersih di akhir cerita
+      document.getElementById("placeSelection").style.display = "none";
+    }
+
+    // --- LOGIKA FLOATING EMOJI ---
+    const floatingEmojis = {
+        hearts: ['🩵', '💖', '💜'],
+        pinguin: ['🐧', '🐨']
+    };
+    const allEmojis = [...floatingEmojis.hearts, ...floatingEmojis.pinguin];
+
+    function createEmoji() {
+      const emojiEl = document.createElement("div");
+      emojiEl.classList.add("floating-emoji");
+      emojiEl.innerText = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+      emojiEl.style.left = Math.random() * 100 + "vw";
+      
+      const duration = Math.random() * 3 + 3; // Durasi melayang antara 3-6 detik
+      emojiEl.style.animationDuration = duration + "s";
+      
+      document.body.appendChild(emojiEl);
+      
+      // Otomatis hapus elemen dari memori setelah animasi selesai
+      setTimeout(() => { emojiEl.remove(); }, duration * 1000);
+    }
+    
+    // Munculkan satu emoji acak setiap 400 milidetik
+    setInterval(createEmoji, 400);
+  </script>
+
+</body>
+</html>
